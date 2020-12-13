@@ -1,0 +1,25 @@
+version: '3'
+services: 
+    web:
+      # 'build: .'  builds the directory where the dockerfile (default name) is placed in
+      build: #builds the directory where the dockerfiles (custom name) is placed in
+        context: . # path cotaining dockerfile
+        dockerfile: Dockerfile.dev ## specify the dockerfile
+      ports: 
+        - "3000:3000" # maps the ports
+      volumes: 
+          - /app/node_modules # 
+          - .:/app # maps the current directory '.' to '/app' folder
+    # the primary option to execute tests is ignore a new test service (bellow), and
+    # just execute a 'docker exec -it <ID>''
+    # its second option to iterate with tests (setupt a new servive/container)
+    # this aproache is impossible to attach the sdin sdout sderr to primary process, thats is,
+    # we cannot iterate with test options      
+    tests:
+      build:
+        context: .
+        dockerfile: Dockerfile.dev
+      volumes: 
+          - /app/node_modules
+          - .:/app
+      command: ["npm", "run", "test"]
